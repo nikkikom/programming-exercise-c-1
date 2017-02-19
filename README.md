@@ -1,4 +1,10 @@
+[![Build Status](https://api.travis-ci.org/nikkikom/programming-exercise-c-1.svg?branch=master](https://travis-ci.org/nikkikom/programming-exercise-c-1) Travis CI (Linux:gcc, Linux:clang, Mac OS X:clang)
+
+[![Coverity Analysis Status](https://scan.coverity.com/projects/11821/badge.svg)](https://scan.coverity.com/projects/nikkikom-programming-exercise-c-1)
+
 # What is that?
+ 
+This is actually the solution of programming excercise described right below.
 
 ## New startup
 
