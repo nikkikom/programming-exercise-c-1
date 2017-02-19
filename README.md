@@ -17,6 +17,7 @@ Time complicity: O(N)
 I got the following performance results with reasonably complex path pattern 
 (with lot of empty, '..' and '.' entries) on  Intel i7-4770T CPU @ 2.50GHz (single core):
  
+```
  path length=10 bytes,  27644001 calls/s, 263 MB/s
  path length=100 bytes,   736233 calls/s,  70 MB/s
  path length=1000 bytes,   76217 calls/s,  72 MB/s
@@ -25,6 +26,7 @@ I got the following performance results with reasonably complex path pattern
  path length=1000000 bytes,   68 calls/s,  65 MB/s
  path length=10000000 bytes,   6 calls/s,  60 MB/s
  path length=100000000 bytes, <1 calls/s,  63 MB/s
+```
 
 ## New startup
 
