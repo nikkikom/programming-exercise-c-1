@@ -5,6 +5,26 @@
 # What is that?
  
 This is actually the solution of programming excercise described right below.
+ 
+## Compliciy
+ 
+The path contains N bytes and M parts. One part is the char sequence between 
+slashes: /part1/part2/part3/...
+
+Space complicity of my solution: O(N).
+Time complicity: O(N)
+ 
+I got the following performance results with reasonably complex path pattern 
+(with lot of empty, '..' and '.' entries) on  Intel i7-4770T CPU @ 2.50GHz (single core):
+ 
+ path length=10 bytes,  27644001 calls/s, 263 MB/s
+ path length=100 bytes,   736233 calls/s,  70 MB/s
+ path length=1000 bytes,   76217 calls/s,  72 MB/s
+ path length=10000 bytes,   8124 calls/s,  77 MB/s
+ path length=100000 bytes,   693 calls/s,  66 MB/s
+ path length=1000000 bytes,   68 calls/s,  65 MB/s
+ path length=10000000 bytes,   6 calls/s,  60 MB/s
+ path length=100000000 bytes, <1 calls/s,  63 MB/s
 
 ## New startup
 
