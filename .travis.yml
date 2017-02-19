@@ -1,34 +1,58 @@
 sudo: false
 language: c
 
-env:
-  global:
-    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-    #   via the "travis encrypt" command using the project repo's public key
-    - secure: "oGTh2CWeXxdH1EOcrtgBl7xNt1TtYBGEVRObKpffJDpoWMi/70FKFL77KhmccbsQEtIdhR5vkaen40EMULY3pIZNCKUt/4yncnDb6okfJIiQGydq+uQsx0YlVIyDnQlrQ/AxhIm8vrFJINYO0ZosD2dQ1px/hwgmpSpDVEC1AbAFbgGlYL4uDmBoHQExYn/bQILvgv1xnNt6HW1KOQ+vmWBgwrCjqM3nRJ7WEqg8qM0CEWtaUrIxxvvoVN/JcF6eA7LfpDiAOtlyLbl8HD7GuFTNittleMGlpHioRNTWzpVZprIim0G5J4WjNd4amHClG0TUJr6em4OuRy/lMyPsOsonCG8eXc5tEyPOxTvaiVrJldFUliUzCQsPessrAdsCQ+LCHUhgji05ygEBx1ZCUR8sXU3dbFnduyH2+DX1BawOGau1bP1qTu9AwL08Sa0gEZwhjDmDtt9kt92CrgEC8nh+Gd/ER29vbkFkdhAxNYc4Y3vZcUWZrJYZmG3ehVdr+EfWE6h02HDWoVj/mnjXvQhnvRqb2YIYa7qunBQ0SQZ8x6rnF3qLhM+g18L05jx3Py2EZzqeE2red7mq7MxMzzs2CD5gn0bscabQ2QZ3dRzHCFrzRonGwHwRcVA/pqJRPSWMRPRc5Lq5jSI0y6YqvXTmqop1reoNTNEbKZ/STmw="
+branches:
+  except:
+    - /^pr\..*/
 
 matrix:
   include:
+    # Linux, gcc 6:
     - os: linux
       dist: trusty
-      addons:
+      addons: &gcc6
+        apt:
+          packages:
+            - gcc-6
+            - gnuplot
+            - bc
+          sources:
+            - ubuntu-toolchain-r-test
+      compiler: gcc
+      env: COMPILER_NAME=gcc O_CC=gcc-6 BUILD_TYPE=RELEASE
+    - os: linux
+      dist: trusty
+      addons: *gcc6
+      compiler: gcc
+      env: COMPILER_NAME=gcc O_CC=gcc-6 BUILD_TYPE=DEBUG
+
+    # Linux, clang 3.8:
+    - os: linux
+      dist: trusty
+      addons: &clang38
         apt:
           packages:
             - clang-3.8
+            - gnuplot
+            - bc
           sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-precise-3.8
-        coverity_scan:
-          project:
-            name: nikkikom/programming-exercise-c-1
-            description: Build submitted via Travis CI
-            version: 1.0
-          notification_email: nikkikom@gmail.com
-          build_command_prepend: "cov-configure --template --compiler clang-3.8 --comptype clangcc && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=RELEASE .."
-          build_command: "cmake --build . --config RELEASE"
-          branch_pattern: coverity_scan
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
       compiler: clang
       env: COMPILER_NAME=clang O_CC=clang-3.8 BUILD_TYPE=RELEASE
+    - os: linux
+      dist: trusty
+      addons: *clang38
+      compiler: clang
+      env: COMPILER_NAME=clang O_CC=clang-3.8 BUILD_TYPE=DEBUG
+
+    # Mac OS X, clang (default version):
+    - os: osx
+      compiler: clang
+      env: COMPILER_NAME=clang O_CC=clang BUILD_TYPE=RELEASE
+    - os: osx
+      compiler: clang
+      env: COMPILER_NAME=clang O_CC=clang BUILD_TYPE=DEBUG
 
 cache:
   directories:
@@ -61,7 +85,7 @@ before_install:
   - export CC=$O_CC
 
 script:
-  - echo "Skipping regular build since Coverity Scan is active"
-
-#after_script:
-#  - cat build/cov-int/build-log.txt
+  - mkdir build
+  - (cd build && cmake -DCMAKE_BUILD_TYPE="$BUILD_TYPE" ..)
+  - (cd build && cmake --build . --config "$BUILD_TYPE")
+  - (cd build && cmake --build . --config "$BUILD_TYPE" --target check)
