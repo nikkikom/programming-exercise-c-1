@@ -26,8 +26,8 @@ normalize(std::string const& path, char delim)
   using size_type = std::string::size_type;
   auto const length = path.length ();
 
-  // will store <start pos, length> of every path part. parts include
-  // leading slashes.
+  // store <start pos, length> of every path part.
+  // parts include leading slashes.
   typedef std::pair<size_type, size_type> position;
   std::vector<position> parts;
   
@@ -39,23 +39,23 @@ normalize(std::string const& path, char delim)
     end = path.find (delim, start+1);
     if (end == std::string::npos) end = length;
     
-    // skipping empty parts and '.'
+    // skipping empty parts and '/.'
     if (end-start <= 1 || (end-start == 2 && path[start+1] == C_DOT))
     continue;
     
-    // register everything but '..' entries as path part
+    // register everything but '/..' entries as path part
     if (end-start != 3 || path[start+1] != C_DOT || path[start+2] != C_DOT)
     {
       parts.emplace_back (start, end-start);
     }
-    // parent entry enhibit the last registered path part
+    // parent entry inhibits the last registered part
     else if (! parts.empty ())
     {
       parts.pop_back ();
     }
   }
   
-  // no parts found -> pring domain name and trailing slash
+  // no parts found -> return just domain name and trailing slash
   if (parts.empty ())
     return path.substr (0, saved_start) + delim;
 
