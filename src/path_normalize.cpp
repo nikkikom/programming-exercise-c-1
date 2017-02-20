@@ -12,8 +12,7 @@
 
 namespace fs {
   
-#define S_CURRENT "."
-#define S_PARENT ".."
+#define C_DOT '.'
   
 // Assumptions:
 // 1. no validity check for domain name. everything before the first slash
@@ -22,51 +21,62 @@ namespace fs {
 //    changed to wstring, char -> wchar_t, S_* and C_SLASH constants should
 //    be written as wide strings or wide chars.
 std::string
-normalize(std::string path, char delim)
+normalize(std::string const& path, char delim)
 {
   using size_type = std::string::size_type;
   auto const length = path.length ();
 
-  // will store <start pos, length> of every path part. parts includes
+  // will store <start pos, length> of every path part. parts include
   // leading slashes.
   typedef std::pair<size_type, size_type> position;
   std::vector<position> parts;
   
   // tokenize
   auto saved_start = path.find (delim);
+
   for (auto start=saved_start, end=saved_start; end<length; start=end)
   {
     end = path.find (delim, start+1);
     if (end == std::string::npos) end = length;
-   
+    
     // skipping empty parts and '.'
-    if (end-start <= 1 || path.substr (start+1, end-start-1) == S_CURRENT)
-      continue;
-
-    // register everything but 'parent' entries as path part
-    if (path.substr (start+1, end-start-1) != S_PARENT)
+    if (end-start <= 1 || (end-start == 2 && path[start+1] == C_DOT))
+    continue;
+    
+    // register everything but '..' entries as path part
+    if (end-start != 3 || path[start+1] != C_DOT || path[start+2] != C_DOT)
+    {
       parts.emplace_back (start, end-start);
+    }
     // parent entry enhibit the last registered path part
     else if (! parts.empty ())
+    {
       parts.pop_back ();
+    }
   }
   
   // no parts found -> pring domain name and trailing slash
   if (parts.empty ())
     return path.substr (0, saved_start) + delim;
 
-  auto s = &path[saved_start];
+  // result length cannot be greater than input path length
+  std::string ret (length, 0);
   
-  // shift every part in-place, eliminating gaps and creating continous string.
+  // copy domain part
+  std::memcpy (&ret[0], &path[0], saved_start);
+  
+  // copy each part into result string
+  auto s = &ret[saved_start];
   for (auto const& part: parts)
   {
-    std::memmove(s, &path[part.first], part.second * sizeof (char));
+    std::memcpy(s, &path[part.first], part.second * sizeof (char));
     s += part.second;
   }
   
-  // strip unused tail that we have now because of shifting
-  path.resize ((size_t) (s - &path[0]));
+  // shrink result string
+  ret.resize (size_type (s - &ret[0]));
   
-  return path;
+  return ret;
 }
-}
+
+} // namespace fs
