@@ -12,10 +12,9 @@
 
 namespace fs {
   
-char const C_SLASH = '/';
+  char const C_SLASH = '/';
 
-std::string normalize(std::string path, char delim = C_SLASH);
-
+  std::string normalize(std::string const& path, char delim = C_SLASH);
 }
 
 #endif /* path_normalize_hpp */
