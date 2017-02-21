@@ -34,8 +34,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		A12857171E5C2D7800103560 /* path_normalize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1694EB01E58FC330076D724 /* path_normalize.cpp */; };
 		A1694EAA1E58FBD80076D724 /* normalize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1694EA91E58FBD80076D724 /* normalize.cpp */; };
-		A1DBD04D1E59B26B00201FE6 /* path_normalize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1694EB01E58FC330076D724 /* path_normalize.cpp */; };
 		A1DBD04E1E59B27000201FE6 /* path_normalize.hpp in Headers */ = {isa = PBXBuildFile; fileRef = A1694EB11E58FC330076D724 /* path_normalize.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
 		A1DBD0501E59B2FF00201FE6 /* libfs_normalize.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1DBD0491E59B22900201FE6 /* libfs_normalize.a */; };
 		A1DBD06A1E59B47100201FE6 /* unit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1DBD0531E59B3E900201FE6 /* unit.cpp */; };
@@ -391,7 +391,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1DBD04D1E59B26B00201FE6 /* path_normalize.cpp in Sources */,
+				A12857171E5C2D7800103560 /* path_normalize.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
