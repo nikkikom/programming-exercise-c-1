@@ -70,7 +70,7 @@ int main(int argc, const char * argv[])
   if (argc > 1) path_size = (size_t) atoll (argv[1]);
   if (argc > 2) seconds = atoi (argv[2]);
   
-  std::cout << "path length=" << path_size << " ";
+  std::cout << "path length=" << path_size << " bytes ";
   perf (path_size, seconds);
   return 0;
 }

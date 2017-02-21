@@ -18,14 +18,14 @@ I got the following performance results with reasonably complex path pattern
 (with lot of empty, '..' and '.' entries) on  Intel i7-4770T CPU @ 2.50GHz (single core):
  
 ```
- path length=10 bytes    29693607 calls/s, 283 MB/s
- path length=100 bytes    1474652 calls/s, 140 MB/s
- path length=1000 bytes    259873 calls/s, 247 MB/s
- path length=10000 bytes    23462 calls/s, 223 MB/s
- path length=100000 bytes    2051 calls/s, 195 MB/s
- path length=1000000 bytes    207 calls/s, 198 MB/s
- path length=10000000 bytes    19 calls/s, 186 MB/s
- path length=100000000 bytes    2 calls/s, 190 MB/s
+ path length=10 bytes   14551153 calls/s, 138 MB/s
+ path length=100 bytes   2513637 calls/s, 239 MB/s
+ path length=1000 bytes   306013 calls/s, 291 MB/s
+ path length=10000 bytes   25795 calls/s, 246 MB/s
+ path length=100000 bytes   2560 calls/s, 244 MB/s
+ path length=1000000 bytes   302 calls/s, 288 MB/s
+ path length=10000000 bytes   24 calls/s, 235 MB/s
+ path length=100000000 bytes   2 calls/s, 212 MB/s
 ```
 
 ## New startup

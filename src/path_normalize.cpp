@@ -25,58 +25,52 @@ normalize(std::string const& path, char delim)
 {
   using size_type = std::string::size_type;
   auto const length = path.length ();
+  
+  size_type result_length = length;
+  if (path[0] != delim) ++result_length;
+  
+  std::string result (result_length, '\0');
 
-  // store <start pos, length> of every path part.
-  // parts include leading slashes.
-  typedef std::pair<size_type, size_type> position;
-  std::vector<position> parts;
+  // find end of domain part
+  auto path_start = path.find (delim);
+  if (path_start == std::string::npos) path_start = length;
+  
+  std::memcpy (&result[0], &path[0], path_start * sizeof (char));
+  
+  auto result_idx = path_start;
   
   // tokenize
-  auto saved_start = path.find (delim);
-
-  for (auto start=saved_start, end=saved_start; end<length; start=end)
+  for (auto start=path_start, end=path_start; end<length; start=end)
   {
     end = path.find (delim, start+1);
     if (end == std::string::npos) end = length;
     
-    // skipping empty parts and '/.'
-    if (end-start <= 1 || (end-start == 2 && path[start+1] == C_DOT))
-    continue;
+    size_type len = end-start;
     
-    // register everything but '/..' entries as path part
-    if (end-start != 3 || path[start+1] != C_DOT || path[start+2] != C_DOT)
+    // skipping empty parts and '/.'
+    if (len <= 1) continue;
+    if (len == 2 && path[start+1] == C_DOT) continue;
+    
+    // copy every part but '/..'
+    if (len != 3 || path[start+1] != C_DOT || path[start+2] != C_DOT)
     {
-      parts.emplace_back (start, end-start);
+      std::memcpy (&result[result_idx], &path[start], len * sizeof (char));
+      result_idx += len;
     }
-    // parent entry inhibits the last registered part
-    else if (! parts.empty ())
+    // parent entry inhibits the last part
+    else
     {
-      parts.pop_back ();
+      while (result_idx > path_start && result[--result_idx] != delim);
     }
   }
-  
-  // no parts found -> return just domain name and trailing slash
-  if (parts.empty ())
-    return path.substr (0, saved_start) + delim;
 
-  // result length cannot be greater than input path length
-  std::string ret (length, 0);
+  // add trailing slash if there are no parts
+  if (result_idx <= path_start) result[result_idx++] = delim;
   
-  // copy domain part
-  std::memcpy (&ret[0], &path[0], saved_start);
+  // shrink result
+  result.resize (result_idx);
   
-  // copy each part into result string
-  auto s = &ret[saved_start];
-  for (auto const& part: parts)
-  {
-    std::memcpy(s, &path[part.first], part.second * sizeof (char));
-    s += part.second;
-  }
-  
-  // shrink result string
-  ret.resize (size_type (s - &ret[0]));
-  
-  return ret;
+  return result;
 }
 
 } // namespace fs

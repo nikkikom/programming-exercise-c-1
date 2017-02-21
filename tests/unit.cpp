@@ -13,7 +13,7 @@ bool test (std::string const& p, std::string const& should)
   std::string r = fs::normalize (p);
   bool success = (should == r);
   
-  if (success) std::cout << "ok ";
+  if (success) std::cout << "ok   ";
   else std::cout << "fail ";
 
   std::cout << p << " -> " << r;
@@ -42,6 +42,7 @@ int unit_tests ()
   failed += !test ("../../.", "../");
   failed += !test ("/..", "/");
   failed += !test ("/../..", "/");
+  failed += !test ("/foo/../../../../bar/./../foo/../../../bar/./foo/./bar/../..", "/bar");
   failed += !test ("../foo", "../foo");
   failed += !test (".", "./");
   failed += !test ("./.", "./");
